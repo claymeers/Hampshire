@@ -26,24 +26,229 @@ statusCategory.forEach((div) => {
     div.addEventListener('click', activeCategory)
 })
 
-// Show dots menu
-const dots = document.querySelectorAll('.settings .uil-ellipsis-h')
+// Let's real work start
+// Get book informations
+const bookShelf = document.querySelector('.bookShelf');
 
-function showMenu() {
-    dots.forEach((dot) => {
-        dot.parentElement.classList.remove('show')
-        this.parentElement.classList.add('show')
-        document.addEventListener('click', (e) => {
-            if(e.target.tagName != 'I') {
-                dot.parentElement.classList.remove('show')
-            }
-        })
+// getting localStorage library
+let myLibrary = JSON.parse(localStorage.getItem("bibliotheque"));
+if (!myLibrary) { //if library isn't exist, pass empty array to myLibrary
+    myLibrary = []
+}
+
+function Book(title, author, subject, cover, 
+    publication, pages, readingStatus, resume) {
+    this.title = title
+    this.author = author
+    this.subject = subject
+    this.cover = cover
+    this.publication = publication
+    this.pages = pages
+    this.readingStatus = readingStatus
+    this.resume = resume
+}
+
+const form = document.querySelector('.fill form');
+
+const uploadInput = document.querySelector('.uploadcover');
+const fileName = document.querySelector('.file-name');
+let file, coverUrl;
+uploadInput.addEventListener('change', function() {
+    file = this.files[0];
+
+    let fileType = file.type; //getting selected file type
+    let validExtensions = ["image/jpeg", "image/jpg", "image/png"]; //adding some valid image extensions in array
+
+    if(validExtensions.includes(fileType)) { //if user selected file is an image file
+        fileName.textContent = file.name
+        let fileReader = new FileReader();
+        fileReader.onload = () => {
+            let fileURL = fileReader.result;
+            coverUrl = fileURL // Get the image link
+        }
+        fileReader.readAsDataURL(file)
+    } else {
+        fileName.textContent = 'This is not an Image File!'
+        file = {}
+    }
+})
+
+form.addEventListener('submit', addBookToLibrary);
+
+function addBookToLibrary(event) {
+    event.preventDefault()
+    // Collect infos from form inputs
+    const myFormData = new FormData(event.target)
+    // An object which contains form infos
+    const formDataObj = {}
+    myFormData.forEach((value, key) => (formDataObj[key] = value))
+
+    // create a book object form constructor
+    const book = new Book(formDataObj.title, 
+        formDataObj.author, formDataObj.genre, 
+        coverUrl, formDataObj.published, 
+        formDataObj.pages, formDataObj.status, 
+        formDataObj.summary)
+    // Add the new book to the library array
+    if (!myLibrary) { //if library isn't exist, pass empty array to myLibrary
+        myLibrary = []
+    }
+    myLibrary.push(book)
+    // console.log(myLibrary)
+    localStorage.setItem("bibliotheque", JSON.stringify(myLibrary));
+    showShelf()
+    fill()
+    form.reset()
+    file = {}
+    fileName.textContent = ''
+}
+
+// let collapse = JSON.parse(localStorage.getItem('bibliotheque'));
+
+// Save into the local storage
+
+// Show books regarding his reading status
+// Show book
+function showShelf() {
+    // console.log(collapse)
+    let livres = `
+        <div class="book sapiens">
+            <div class="cover">
+                <img src="Img/cover/sapiens.jpg" alt="">
+            </div>
+            <div class="details">
+                <p class="category">History</p>
+                <p class="title">Sapiens: A Brief History of Humankind</p>
+                <!-- <span class="pages">&#8226; 443 pages</span>  -->
+                <p class="author">By <span class="author-name">Yuval Noah Harari</span></p>
+                <div class="settings">
+                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                    <ul class="task-menu">
+                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
+                        <li><i class="uil uil-pen"></i> Edit</li>
+                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="book ego">
+            <div class="cover">
+                <img src="Img/cover/ego.jpg" alt="">
+            </div>
+            <div class="details">
+                <p class="category">Psychology</p>
+                <p class="title">Ego is the enemy</p>
+                <!-- <span class="pages">&#8226; 443 pages</span>  -->
+                <p class="author">By <span class="author-name">Ryan Holiday</span></p>
+                <div class="settings">
+                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                    <ul class="task-menu">
+                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
+                        <li><i class="uil uil-pen"></i> Edit</li>
+                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="book code">
+            <div class="cover">
+                <img src="Img/cover/thinklikeaprogrammer.jpg" alt="">
+            </div>
+            <div class="details">
+                <p class="category">Programming</p>
+                <p class="title">Think Like a Programmer</p>
+                <!-- <span class="pages">&#8226; 443 pages</span>  -->
+                <p class="author">By <span class="author-name">V. Anton Spraul</span></p>
+                <div class="settings">
+                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                    <ul class="task-menu">
+                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
+                        <li><i class="uil uil-pen"></i> Edit</li>
+                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="book hurt">
+            <div class="cover">
+                <img src="Img/cover/canthurtme.jpg" alt="">
+            </div>
+            <div class="details">
+                <p class="category">Biography</p>
+                <p class="title">Can't hurt me</p>
+                <!-- <span class="pages">&#8226; 443 pages</span>  -->
+                <p class="author">By <span class="author-name">David Goggins</span></p>
+                <div class="settings">
+                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                    <ul class="task-menu">
+                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
+                        <li><i class="uil uil-pen"></i> Edit</li>
+                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="book sleep">
+            <div class="cover">
+                <img src="Img/cover/sleep.jpg" alt="">
+            </div>
+            <div class="details">
+                <p class="category">Science</p>
+                <p class="title">Why We Sleep</p>
+                <!-- <span class="pages">&#8226; 443 pages</span>  -->
+                <p class="author">By <span class="author-name">Matthew Walker</span></p>
+                <div class="settings">
+                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                    <ul class="task-menu">
+                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
+                        <li><i class="uil uil-pen"></i> Edit</li>
+                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `
+    for (const item of myLibrary) {
+        livres += `
+        <div class="book">
+            <div class="cover">
+                <img src=${item.cover} alt="">
+            </div>
+            <div class="details">
+                <p class="category">${item.subject}</p>
+                <p class="title">${item.title}</p>
+                <p class="author">By <span class="author-name">${item.author}</span></p>
+                <div class="settings">
+                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                    <ul class="task-menu">
+                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
+                        <li><i class="uil uil-pen"></i> Edit</li>
+                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        `
+    }
+    bookShelf.innerHTML = livres
+}
+
+showShelf()
+
+// Show dots menu
+function showMenu(selectedBook) {
+    // getting book menu
+    selectedBook.parentElement.classList.add('show')
+    document.addEventListener('click', (e) => {
+        if(e.target.tagName != 'I'|| e.target != selectedBook) {
+            selectedBook.parentElement.classList.remove('show')
+        }
     })
 }
 
-dots.forEach((dot) => {
-    dot.addEventListener('click', showMenu)
-})
+// dots.forEach((dot) => {
+//     dot.addEventListener('click', showMenu)
+// })
 
 // Show delete pop up
 function popUp() {
@@ -84,58 +289,3 @@ function less() {
     moreDot.style.display = 'inline'
     crech.classList.remove = 'plus';
 }
-
-// Let's real work start
-// Get book informations
-const bookInfos = {
-    id: 5,
-    title: 'The Lean Startup',
-    author: 'Eric Ries',
-    subject: 'Entrepreneurship',
-    cover: 'Img/cover/leanstartup.jpg',
-
-    publication: '2011',
-    pages: '336',
-    readingStatus: 'Want to read',
-    resume: `Most startups fail. But many of those failures are preventable. The Lean Startup is a new approach being adopted across the globe, changing the way companies are built and new products are launched. Eric Ries defines a startup as an organization dedicated to creating something new under conditions of extreme uncertainty. This is just as true for one person in a garage or a group of seasoned professionals in a Fortune 500 boardroom. What they have in common is a mission to penetrate that fog of uncertainty to discover a successful path to a sustainable business. The Lean Startup approach fosters companies that are both more capital efficient and that leverage human creativity more effectively. Inspired by lessons from lean manufacturing, it relies on "validated learning," rapid scientific experimentation, as well as a number of counter-intuitive practices that shorten product development cycles, measure actual progress without resorting to vanity metrics, and learn what customers really want. It enables a company to shift directions with agility, altering plans inch by inch, minute by minute. Rather than wasting time creating elaborate business plans, The Lean Startup offers entrepreneurs - in companies of all sizes - a way to test their vision continuously, to adapt and adjust before it's too late. Ries provides a scientific approach to creating and managing successful startups in a age when companies need to innovate more than ever.`
-}
-
-// a book template
-`
-<div class="book">
-    <div class="cover">
-        <img src=${bookInfos.cover} alt="">
-    </div>
-    <div class="details">
-        <p class="category">=${bookInfos.subject}</p>
-        <p class="title">=${bookInfos.title}</p>
-        <p class="author">By <span class="author-name">=${bookInfos.author}</span></p>
-        <div class="settings">
-            <i class="uil uil-ellipsis-h"></i>
-            <ul class="task-menu">
-                <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                <li><i class="uil uil-pen"></i> Edit</li>
-                <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-            </ul>
-        </div>
-    </div>
-</div>
-`
-
-function Book(title, author, subject, cover, publication, pages, readingStatus, resume) {
-    this.title = title
-    this.author = author
-    this.subject = subject
-    this.cover = cover
-    this.publication = publication
-    this.pages = pages
-    this.readingStatus = readingStatus
-    this.resume = resume
-}
-
-const bokk = new Book('Sapiens', 'Yuval', 'sapiens.jpg', '2011', '143', 'finished', 'So good!')
-console.log(bokk.title) //'Sapiens'
-
-// Save into the local storage
-
-// Show books regarding his reading status

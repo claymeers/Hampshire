@@ -48,101 +48,7 @@
                 </div>
             </div>
             <div class="bookShelf">
-                <div class="book sapiens">
-                    <div class="cover">
-                        <img src="Img/cover/sapiens.jpg" alt="">
-                    </div>
-                    <div class="details">
-                        <p class="category">History</p>
-                        <p class="title">Sapiens: A Brief History of Humankind</p>
-                        <!-- <span class="pages">&#8226; 443 pages</span>  -->
-                        <p class="author">By <span class="author-name">Yuval Noah Harari</span></p>
-                        <div class="settings">
-                            <i class="uil uil-ellipsis-h"></i>
-                            <ul class="task-menu">
-                                <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                                <li><i class="uil uil-pen"></i> Edit</li>
-                                <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="book ego">
-                    <div class="cover">
-                        <img src="Img/cover/ego.jpg" alt="">
-                    </div>
-                    <div class="details">
-                        <p class="category">Psychology</p>
-                        <p class="title">Ego is the enemy</p>
-                        <!-- <span class="pages">&#8226; 443 pages</span>  -->
-                        <p class="author">By <span class="author-name">Ryan Holiday</span></p>
-                        <div class="settings">
-                            <i class="uil uil-ellipsis-h"></i>
-                            <ul class="task-menu">
-                                <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                                <li><i class="uil uil-pen"></i> Edit</li>
-                                <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="book code">
-                    <div class="cover">
-                        <img src="Img/cover/thinklikeaprogrammer.jpg" alt="">
-                    </div>
-                    <div class="details">
-                        <p class="category">Programming</p>
-                        <p class="title">Think Like a Programmer</p>
-                        <!-- <span class="pages">&#8226; 443 pages</span>  -->
-                        <p class="author">By <span class="author-name">V. Anton Spraul</span></p>
-                        <div class="settings">
-                            <i class="uil uil-ellipsis-h"></i>
-                            <ul class="task-menu">
-                                <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                                <li><i class="uil uil-pen"></i> Edit</li>
-                                <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="book hurt">
-                    <div class="cover">
-                        <img src="Img/cover/canthurtme.jpg" alt="">
-                    </div>
-                    <div class="details">
-                        <p class="category">Biography</p>
-                        <p class="title">Can't hurt me</p>
-                        <!-- <span class="pages">&#8226; 443 pages</span>  -->
-                        <p class="author">By <span class="author-name">David Goggins</span></p>
-                        <div class="settings">
-                            <i class="uil uil-ellipsis-h"></i>
-                            <ul class="task-menu">
-                                <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                                <li><i class="uil uil-pen"></i> Edit</li>
-                                <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="book sleep">
-                    <div class="cover">
-                        <img src="Img/cover/sleep.jpg" alt="">
-                    </div>
-                    <div class="details">
-                        <p class="category">Science</p>
-                        <p class="title">Why We Sleep</p>
-                        <!-- <span class="pages">&#8226; 443 pages</span>  -->
-                        <p class="author">By <span class="author-name">Matthew Walker</span></p>
-                        <div class="settings">
-                            <i class="uil uil-ellipsis-h"></i>
-                            <ul class="task-menu">
-                                <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                                <li><i class="uil uil-pen"></i> Edit</li>
-                                <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </section>
         <div class="footer">
@@ -192,10 +98,10 @@
                     <div class="field genre">
                         <input type="text" name="genre" id="genre" placeholder="" required>
                         <span></span>
-                        <label for="genre">Genre*</label>
+                        <label for="genre">Subject*</label>
                     </div>
                     <div class="field pub">
-                        <input type="text" name="published" id="published" placeholder="" required>
+                        <input type="number" name="published" id="published" placeholder="" required>
                         <span></span>
                         <label for="published">First published</label>
                     </div>
@@ -211,19 +117,20 @@
                 </div>
                 <div class="sache">
                     <div class="upload">
-                        <input type="file" name="img" id="img" class="uploadcover">
+                        <input type="file" name="img" id="img" class="uploadcover" required>
                         <label for="img"><i class="uil uil-image-upload"></i> Upload cover</label>
+                        <div class="file-name"></div>
                     </div>
                     <div class="Stat">
                         <label for="status">Reading status*</label>
-                        <select name="" id="status">
+                        <select name="status" id="status">
                             <option value="Want to read">Want to read</option>
                             <option value="Currently reading">Currently reading</option>
                             <option value="Finished">Finished</option>
                         </select>
                     </div>
                     <div class="field sorry">
-                        <input type="number" name="rpages" id="rpages" placeholder="" required >
+                        <input type="number" name="rpages" id="rpages" placeholder="" required disabled>
                         <span></span>
                         <label for="rpages">Read pages</label>
                     </div>
@@ -233,7 +140,7 @@
                     <button type="reset" class="remove"><i class="uil uil-trash"></i> Remove</button>
                     <div class="submit">
                         <button type="button" class="cancel" onclick="fill()">Cancel</button>
-                        <button type="button" class="save">Save changes</button>
+                        <button type="submit" class="save">Save changes</button>
                     </div>
                 </div>
             </form>

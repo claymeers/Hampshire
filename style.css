@@ -198,6 +198,8 @@ body {
 
 .cover img {
     height: 250px;
+    width: 172px;
+    object-fit: cover;
     border-radius: 10px;
 }
 
@@ -646,6 +648,13 @@ input::-webkit-inner-spin-button {
 
 .fill button i {
     color: #7e7c7c;
+}
+
+.file-name {
+    color: #6b6e74;
+    font-size: 14px;
+    text-align: left;
+    margin-left: 10px;
 }
 
 .fill .buttons button {
