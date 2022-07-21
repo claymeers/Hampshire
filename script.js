@@ -90,11 +90,12 @@ function addBookToLibrary(event) {
         formDataObj.pages, formDataObj.status, 
         formDataObj.summary)
     // Add the new book to the library array
-    if (!myLibrary) { //if library isn't exist, pass empty array to myLibrary
-        myLibrary = []
+    if(!isEditedBook) {
+        myLibrary.push(book)
+        isEditedTask = false;
+    } else {
+        myLibrary[editId] = book
     }
-    myLibrary.push(book)
-    // console.log(myLibrary)
     localStorage.setItem("bibliotheque", JSON.stringify(myLibrary));
     showShelf()
     fill()
@@ -103,14 +104,8 @@ function addBookToLibrary(event) {
     fileName.textContent = ''
 }
 
-// let collapse = JSON.parse(localStorage.getItem('bibliotheque'));
-
-// Save into the local storage
-
-// Show books regarding his reading status
 // Show book
 function showShelf() {
-    // console.log(collapse)
     let livres = `
         <div class="book sapiens">
             <div class="cover">
@@ -208,40 +203,82 @@ function showShelf() {
             </div>
         </div>
     `
-    for (const item of myLibrary) {
+    myLibrary.forEach((book, id) => {
         livres += `
-        <div class="book">
-            <div class="cover">
-                <img src=${item.cover} alt="">
-            </div>
-            <div class="details">
-                <p class="category">${item.subject}</p>
-                <p class="title">${item.title}</p>
-                <p class="author">By <span class="author-name">${item.author}</span></p>
-                <div class="settings">
-                    <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
-                    <ul class="task-menu">
-                        <li onclick="showAbout()"><i class="uil uil-info-circle"></i>Infos</li>
-                        <li><i class="uil uil-pen"></i> Edit</li>
-                        <li onclick="popUp()"><i class="uil uil-trash"></i>Delete</li>
-                    </ul>
+            <div class="book">
+                <div class="cover">
+                    <img src=${book.cover} alt="">
+                </div>
+                <div class="details">
+                    <p class="category">${book.subject}</p>
+                    <p class="title">${book.title}</p>
+                    <p class="author">By <span class="author-name">${book.author}</span></p>
+                    <div class="settings">
+                        <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                        <ul class="task-menu">
+                            <li onclick="setAboutData(${id})"><i class="uil uil-info-circle"></i>Infos</li>
+                            <li onclick="editBook(${id})"><i class="uil uil-pen"></i> Edit</li>
+                            <li onclick="wantToDeleteBook(${id})"><i class="uil uil-trash"></i>Delete</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        `
-    }
+            `          
+    });
     bookShelf.innerHTML = livres
 }
 
 showShelf()
 
+let selectedBook;
+
+// Delete book
+function wantToDeleteBook(selectedBookId) {
+    popUp() 
+    selectedBook = selectedBookId
+}
+
+// Really Delete book
+function deleteBook() {
+    myLibrary.splice(selectedBook, 1);
+    localStorage.setItem("bibliotheque", JSON.stringify(myLibrary));
+    showShelf()
+    popUp() 
+}
+
+// Edit a book
+let editId,
+isEditedBook = false;
+
+// update the form
+const titleInput = document.getElementById('title')
+const authorInput = document.getElementById('author')
+const subjectInput = document.getElementById('genre')
+const publicationInput = document.getElementById('published')
+const pagesInput = document.getElementById('pages')
+const statusInput = document.getElementById('status')
+const summaryInput = document.getElementById('summary')
+
+function editBook(id) {
+    isEditedBook = true
+    editId = id
+    titleInput.value = myLibrary[id].title
+    authorInput.value = myLibrary[id].author
+    subjectInput.value = myLibrary[id].subject
+    publicationInput.value = myLibrary[id].publication
+    pagesInput.value = myLibrary[id].pages 
+    statusInput.value = myLibrary[id].readingStatus
+    summaryInput.value = myLibrary[id].resume
+    fill()
+}
+
 // Show dots menu
-function showMenu(selectedBook) {
+function showMenu(selectedBookDots) {
     // getting book menu
-    selectedBook.parentElement.classList.add('show')
+    selectedBookDots.parentElement.classList.add('show')
     document.addEventListener('click', (e) => {
-        if(e.target.tagName != 'I'|| e.target != selectedBook) {
-            selectedBook.parentElement.classList.remove('show')
+        if(e.target.tagName != 'I'|| e.target != selectedBookDots) {
+            selectedBookDots.parentElement.classList.remove('show')
         }
     })
 }
@@ -268,24 +305,60 @@ function fill() {
 }
 
 // Show infos - about section
+function setAboutData(id) {
+    const bookCover = document.querySelector('.bookCover img')
+    const bookTitle = document.querySelector('.bookTitle')
+    const bookAuthor = document.querySelector('.bookAuthor')
+    const bookPages = document.querySelector('.stats .pages .infos')
+    const bookSubject = document.querySelector('.stats .subject .infos')
+    const bookPublished = document.querySelector('.stats .published .infos')
+    const bookSummary = document.querySelector('.plot .crech')
+
+    bookCover.src = myLibrary[id].cover
+    bookTitle.textContent =  myLibrary[id].title
+    bookAuthor.textContent = myLibrary[id].author
+    bookPages.textContent = myLibrary[id].pages
+    bookSubject.textContent = myLibrary[id].subject.toLowerCase();
+    bookPublished.textContent = myLibrary[id].publication
+    // bookSummary.textContent = myLibrary[id].resume
+    shrink(myLibrary[id].resume)
+
+    showAbout()
+}
+
 function showAbout() {
     const about = document.querySelector('.about')
     about.classList.toggle('show')
 }
 
 // Plot read more
-const plot = document.querySelector('.moreTxt')
-const moreDot = document.querySelector('.more')
-const crech = document.querySelector('.crech')
+function shrink(text) {
+    const bookSummary = document.querySelector('.plot .crech')
+    if (text.length > 455) {
+        bookSummary.innerHTML = `
+            ${text.substring(0, 450)} <span class="dots more" onclick="more()">...more</span>
+            <span class="moreTxt">${text.substring(450, text.length)}<span class="dots less" onclick="less()">...less</span></span>
+        `
+    } else {
+        bookSummary.textContent = text
+    }
+}
+
 function more() {
+    const crech = document.querySelector('.crech')
+    const plot = crech.querySelector('.moreTxt')
+    const moreDot = crech.querySelector('.more')
+
+    crech.style.overflow = 'auto';
     plot.style.display = 'block'
     moreDot.style.display = 'none'
-    crech.style.overflow = 'auto';
-    crech.classList.add = 'plus';
 }
 
 function less() {
+    const crech = document.querySelector('.crech')
+    const plot = crech.querySelector('.moreTxt')
+    const moreDot = crech.querySelector('.more')
+
     plot.style.display = 'none'
     moreDot.style.display = 'inline'
-    crech.classList.remove = 'plus';
 }
