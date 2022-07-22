@@ -3,9 +3,9 @@
 
 So I developed by cool library app
 
-[Checkout the demo](https://creative-dashboard.netlify.app/)
+[Checkout the demo](https://hampshire-nasturtium.netlify.app/)
 
-[![Image of Calc](Img/preview.png)](https://creative-dashboard.netlify.app/)
+[![Image of Calc](Img/preview.png)](https://hampshire-nasturtium.netlify.app/)
 
 
 
