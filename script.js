@@ -1,5 +1,6 @@
 // Greetings
 window.addEventListener('load', () => {
+    // Day time
     const dayTime = document.querySelector('.day-time')
     const currentTime = new Date()
     const currentHours = currentTime.getHours()
@@ -12,23 +13,34 @@ window.addEventListener('load', () => {
     } else {
         dayTime.textContent = 'Night'
     }
+    
+    // Username
+    const userName = document.querySelector('.username')
+    let yourName = localStorage.getItem("nom");
+    if (!yourName) {
+        yourName = prompt("What's your name?", '');
+        localStorage.setItem("nom", yourName);
+    }
+    userName.textContent = yourName
 })
 
-// Book status caterory
+
+
+// Book status caterory aka filters
 const statusCategory = document.querySelectorAll('.tabs div')
-function activeCategory() {
-    statusCategory.forEach((div) => {
-        div.classList.remove('active')
-        this.classList.add('active')
-    })
-}
+const tabs = document.querySelector('.tabs')
 statusCategory.forEach((div) => {
-    div.addEventListener('click', activeCategory)
+    div.addEventListener('click', () => {
+        tabs.querySelector('div.active').classList.remove('active')
+        div.classList.add('active')
+        showShelf(div.id)
+    })
 })
 
 // Let's real work start
 // Get book informations
 const bookShelf = document.querySelector('.bookShelf');
+let state = 'Want to read'
 
 // getting localStorage library
 let myLibrary = JSON.parse(localStorage.getItem("bibliotheque"));
@@ -89,6 +101,8 @@ function addBookToLibrary(event) {
         coverUrl, formDataObj.published, 
         formDataObj.pages, formDataObj.status, 
         formDataObj.summary)
+
+    state = book.readingStatus
     // Add the new book to the library array
     if(!isEditedBook) {
         myLibrary.push(book)
@@ -97,7 +111,7 @@ function addBookToLibrary(event) {
         myLibrary[editId] = book
     }
     localStorage.setItem("bibliotheque", JSON.stringify(myLibrary));
-    showShelf()
+    showShelf(state)
     fill()
     form.reset()
     file = {}
@@ -105,7 +119,7 @@ function addBookToLibrary(event) {
 }
 
 // Show book
-function showShelf() {
+function showShelf(filters) {
     let livres = `
         <div class="book sapiens">
             <div class="cover">
@@ -204,7 +218,8 @@ function showShelf() {
         </div>
     `
     myLibrary.forEach((book, id) => {
-        livres += `
+        if (book.readingStatus == filters) {
+            livres += `
             <div class="book">
                 <div class="cover">
                     <img src=${book.cover} alt="">
@@ -223,12 +238,13 @@ function showShelf() {
                     </div>
                 </div>
             </div>
-            `          
+            `  
+        }        
     });
     bookShelf.innerHTML = livres
 }
 
-showShelf()
+showShelf(state)
 
 let selectedBook;
 
@@ -236,13 +252,14 @@ let selectedBook;
 function wantToDeleteBook(selectedBookId) {
     popUp() 
     selectedBook = selectedBookId
+    state = myLibrary[selectedBook].readingStatus
 }
 
 // Really Delete book
 function deleteBook() {
     myLibrary.splice(selectedBook, 1);
     localStorage.setItem("bibliotheque", JSON.stringify(myLibrary));
-    showShelf()
+    showShelf(state)
     popUp() 
 }
 

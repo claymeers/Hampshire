@@ -12,7 +12,7 @@ So I developed by cool library app
 # Features
  
 - 👋 **Greetings** - change depending of the time of the day
-- 🔍 **Search bar** - Nice search bar to find book on your library
+- 🔍 **Search bar** - Nice search bar to find book on your library with suggestions
 - 🍕  **Add new book** - you can add new book to your dashboard
 - 🗽  **Reading status** - books are sorted by their reading status and you can  navigate through tabs
 - 💢  **Pop up** - menu, delete warning, add form
