@@ -241,7 +241,7 @@ function showShelf(filters) {
             `  
         }        
     });
-    bookShelf.innerHTML = livres
+    bookShelf.innerHTML = livres || `<span>You don't have any task here</span>`;
 }
 
 showShelf(state)

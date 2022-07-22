@@ -248,6 +248,9 @@ body {
     justify-content: space-around;
     color: #bdbdbd;
     margin-bottom: 1rem;
+    position: fixed;
+    bottom: 1rem;
+    width: 100%;
 }
 
 .footer span {
@@ -896,4 +899,14 @@ input::-webkit-inner-spin-button {
 
 .moreTxt {
     display: none;
+}
+
+/* Responsive */
+
+@media (min-width: 1300px) {
+    .bookShelf {
+        grid-template-columns: repeat(6, 1fr);
+        margin-left: 4rem;
+        margin-right: 4rem;
+    }
 }
