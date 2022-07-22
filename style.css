@@ -909,4 +909,8 @@ input::-webkit-inner-spin-button {
         margin-left: 4rem;
         margin-right: 4rem;
     }
+
+    .about {  
+        width: 20%;
+    }
 }
