@@ -248,9 +248,9 @@ body {
     justify-content: space-around;
     color: #bdbdbd;
     margin-bottom: 1rem;
-    position: fixed;
+    /* position: fixed;
     bottom: 1rem;
-    width: 100%;
+    width: 100%; */
 }
 
 .footer span {
